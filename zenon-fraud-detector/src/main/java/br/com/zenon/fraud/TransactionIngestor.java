@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class TransactionIngestor {
 
-    private static final int MAX_TRANSACTIONS = 1000;
+    private static final int MAX_TRANSACTIONS = 50000;
 
     public List<Transaction> readTransactions(String path) throws IOException {
 
