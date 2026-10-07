@@ -3,6 +3,7 @@ package br.com.zenon.fraud;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 
 public class Main {
 
@@ -36,5 +37,38 @@ public class Main {
                 .forEach((type, count) ->
                         System.out.println(" - " + type + ": " + count));
 
+        TransactionRepository listRepository = new TransactionListRepository(transactions);
+        //String name = "C1231006815";
+        //String name = "C12345";
+        String name = "C1868032458";
+        long init = System.nanoTime();
+//        mapRepository.searchTransactionByCustomerName(name).ifPresentOrElse(
+//                t -> System.out.println(t),
+//                () -> System.out.println("Transação não encontrada para o cliente "+name));
+        Optional<Transaction> result = listRepository.searchTransactionByCustomerName(name);
+        long end = System.nanoTime();
+        result.ifPresentOrElse(
+                t -> System.out.println(t),
+                () -> System.out.println("Transação não encontrada para o cliente "+name));
+        System.out.println("tempo: " + (end - init) + "ns");
+        System.out.println("tempo: " + ((end - init)/1000)+ "us");
+        System.out.println("tempo: " + ( (end - init) / 1000000) + "ms");
+
+        TransactionRepository mapRepository = new TransactionMapRepository(transactions);
+        //String name = "C1231006815";
+        //String name = "C12345";
+//        String name2 = "C1868032458";
+        long init2 = System.nanoTime();
+//        mapRepository.searchTransactionByCustomerName(name).ifPresentOrElse(
+//                t -> System.out.println(t),
+//                () -> System.out.println("Transação não encontrada para o cliente "+name));
+        Optional<Transaction> result2 = mapRepository.searchTransactionByCustomerName(name);
+        long end2 = System.nanoTime();
+        result2.ifPresentOrElse(
+                t -> System.out.println(t),
+                () -> System.out.println("Transação não encontrada para o cliente "+name));
+        System.out.println("tempo: " + (end2 - init2) + "ns");
+        System.out.println("tempo: " + ((end2 - init2)/1000)+ "us");
+        System.out.println("tempo: " + ( (end2 - init2) / 1000000) + "ms");
     }
 }
