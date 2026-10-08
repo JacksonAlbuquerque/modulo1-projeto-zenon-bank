@@ -33,7 +33,7 @@ public class TransactionIngestor {
         return transactions;
     }
 
-    private Optional<Transaction> parseLine(String line) {
+    public static Optional<Transaction> parseLine(String line) {
         try {
             String[] fields = line.split(",", -1);
             if (fields.length != 11) throw new IllegalArgumentException("expected 11 fields but got " + fields.length);
