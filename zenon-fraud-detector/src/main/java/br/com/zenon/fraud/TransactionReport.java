@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class TransactionReport {
+
     private final String path;
     private long totalOfLines = 0;
     private long totalOfFrauds = 0;
@@ -17,7 +18,8 @@ public class TransactionReport {
         this.path = path;
     }
 
-    public void processAndPrintResults() throws IOException {
+    public ReportSummary process() throws IOException {
+
         totalValue = BigDecimal.ZERO;
         totalOfFrauds = 0;
         totalOfLines = 0;
@@ -34,8 +36,7 @@ public class TransactionReport {
                 }
             });
         }
-        System.out.println("Total de linhas: " + totalOfLines);
-        System.out.println("Total de fraudes: " + totalOfFrauds);
-        System.out.println("Valor total transacionado: " + totalValue);
+
+        return new ReportSummary(totalOfLines, totalOfFrauds, totalValue);
     }
 }
