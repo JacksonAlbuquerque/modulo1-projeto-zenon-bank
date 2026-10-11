@@ -86,8 +86,9 @@ public class TransactionSQLRepository implements TransactionRepository {
                 ps.executeBatch(); // usando batch
                 conn.commit();// para ficar com  auto commit comentar essa linha
             } catch (SQLException e) {
-                throw new RuntimeException(e);
-            } finally {
+                conn.rollback();
+                throw e;
+            }  finally {
                 conn.setAutoCommit(true);           // (d) devolve a conexão como recebeu // para ficar com  auto commit comentar essa linha
             }
         } catch (SQLException e) { // para ficar com  auto commit comentar essa linha
