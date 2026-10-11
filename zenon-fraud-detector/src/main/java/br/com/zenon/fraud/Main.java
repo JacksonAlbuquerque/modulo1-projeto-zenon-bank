@@ -45,7 +45,7 @@ public class Main {
 //        mapRepository.searchTransactionByCustomerName(name).ifPresentOrElse(
 //                t -> System.out.println(t),
 //                () -> System.out.println("Transação não encontrada para o cliente "+name));
-        Optional<Transaction> result = listRepository.searchTransactionByCustomerName(name);
+        Optional<Transaction> result = listRepository.findByOriginName(name);
         long end = System.nanoTime();
         result.ifPresentOrElse(
                 t -> System.out.println(t),
@@ -59,10 +59,10 @@ public class Main {
         //String name = "C12345";
 //        String name2 = "C1868032458";
         long init2 = System.nanoTime();
-//        mapRepository.searchTransactionByCustomerName(name).ifPresentOrElse(
+//        mapRepository.findByOriginName(name).ifPresentOrElse(
 //                t -> System.out.println(t),
 //                () -> System.out.println("Transação não encontrada para o cliente "+name));
-        Optional<Transaction> result2 = mapRepository.searchTransactionByCustomerName(name);
+        Optional<Transaction> result2 = mapRepository.findByOriginName(name);
         long end2 = System.nanoTime();
         result2.ifPresentOrElse(
                 t -> System.out.println(t),

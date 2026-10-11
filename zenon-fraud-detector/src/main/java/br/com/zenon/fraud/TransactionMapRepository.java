@@ -17,7 +17,11 @@ public class TransactionMapRepository implements TransactionRepository {
     }
 
     @Override
-    public Optional<Transaction> searchTransactionByCustomerName(final String customerName){
+    public Optional<Transaction> findByOriginName(final String customerName){
         return Optional.ofNullable(map.get(customerName));
+    }
+
+    @Override
+    public void save(Transaction transaction) {
     }
 }

@@ -10,7 +10,7 @@ public class TransactionListRepository implements TransactionRepository {
     }
 
     @Override
-    public Optional<Transaction> searchTransactionByCustomerName(final String customerName){
+    public Optional<Transaction> findByOriginName(final String customerName){
 //        for (Transaction transaction : fullList) {
 //            if(transaction.customerOrig().name().equals(customerName)){
 //                return Optional.of(transaction);
@@ -19,5 +19,9 @@ public class TransactionListRepository implements TransactionRepository {
         return fullList.stream()
                 .filter(t -> t.customerOrig().name().equals(customerName))
                 .findFirst();
+    }
+
+    @Override
+    public void save(Transaction transaction) {
     }
 }
