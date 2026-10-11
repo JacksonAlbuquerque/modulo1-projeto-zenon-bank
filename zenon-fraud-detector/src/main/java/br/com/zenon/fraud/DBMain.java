@@ -10,16 +10,24 @@ public class DBMain {
 
     static void main() throws IOException, SQLException {
         try (final Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/zenon", "root", "senha123")) {
+                "jdbc:mysql://localhost:3306/zenon?rewriteBatchedStatements=true", "root", "senha123")) {
 
             TransactionIngestor transactionIngestor = new TransactionIngestor();
             List<Transaction> transactions = transactionIngestor.readTransactions(PATH_FILE);
             TransactionSQLRepository transactionSQLRepository = new TransactionSQLRepository(conn);
+//            {// Se for executar esse comanod mais de uma vez lembrar de sempre limpar o banco antes da proxima execução TRUNCATE TABLE TRANSACTIONS;
+//                long init1 = System.nanoTime();
+//                for (Transaction transaction : transactions) {
+//                    transactionSQLRepository.save(transaction);
+//                }
+//                long end1 = System.nanoTime();
+//                System.out.println("tempo: " + (end1 - init1) + "ns");
+//                System.out.println("tempo: " + ((end1 - init1) / 1000) + "us");
+//                System.out.println("tempo: " + ((end1 - init1) / 1000000) + "ms");
+//            }
             {// Se for executar esse comanod mais de uma vez lembrar de sempre limpar o banco antes da proxima execução TRUNCATE TABLE TRANSACTIONS;
                 long init1 = System.nanoTime();
-                for (Transaction transaction : transactions) {
-                    transactionSQLRepository.save(transaction);
-                }
+                transactionSQLRepository.saveAll(transactions);
                 long end1 = System.nanoTime();
                 System.out.println("tempo: " + (end1 - init1) + "ns");
                 System.out.println("tempo: " + ((end1 - init1) / 1000) + "us");
