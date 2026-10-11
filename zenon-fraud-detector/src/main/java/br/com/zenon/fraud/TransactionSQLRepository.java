@@ -66,25 +66,33 @@ public class TransactionSQLRepository implements TransactionRepository {
 
         String sql = "INSERT INTO TRANSACTIONS (step, type, amount, name_orig, old_balance_orig, new_balance_orig, name_dest, old_balance_dest, new_balance_dest, is_fraud, is_flagged_fraud) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            for (Transaction transaction : transactions) {
-                ps.setInt(1, transaction.step());
-                ps.setString(2, transaction.type().name());
-                ps.setBigDecimal(3, transaction.amount());
-                ps.setString(4, transaction.customerOrig().name());
-                ps.setBigDecimal(5, transaction.customerOrig().oldBalance());
-                ps.setBigDecimal(6, transaction.customerOrig().newBalance());
-                ps.setString(7, transaction.customerDest().name());
-                ps.setBigDecimal(8, transaction.customerDest().oldBalance());
-                ps.setBigDecimal(9, transaction.customerDest().newBalance());
-                ps.setBoolean(10, transaction.isFraud());
-                ps.setBoolean(11, transaction.isFlaggedFraud());
-                ps.addBatch();
+        try {//para ficar com  auto commit comentar essa linha
+            conn.setAutoCommit(false); // sem auto Commit, para ficar com  auto commit comentar essa linha
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                for (Transaction transaction : transactions) {
+                    ps.setInt(1, transaction.step());
+                    ps.setString(2, transaction.type().name());
+                    ps.setBigDecimal(3, transaction.amount());
+                    ps.setString(4, transaction.customerOrig().name());
+                    ps.setBigDecimal(5, transaction.customerOrig().oldBalance());
+                    ps.setBigDecimal(6, transaction.customerOrig().newBalance());
+                    ps.setString(7, transaction.customerDest().name());
+                    ps.setBigDecimal(8, transaction.customerDest().oldBalance());
+                    ps.setBigDecimal(9, transaction.customerDest().newBalance());
+                    ps.setBoolean(10, transaction.isFraud());
+                    ps.setBoolean(11, transaction.isFlaggedFraud());
+                    ps.addBatch(); // usando batch
+                }
+                ps.executeBatch(); // usando batch
+                conn.commit();// para ficar com  auto commit comentar essa linha
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } finally {
+                conn.setAutoCommit(true);           // (d) devolve a conexão como recebeu // para ficar com  auto commit comentar essa linha
             }
-            ps.executeBatch();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        } catch (SQLException e) { // para ficar com  auto commit comentar essa linha
+            throw new RuntimeException(e);// para ficar com  auto commit comentar essa linha
+        }// para ficar com  auto commit comentar essa linha
 
     }
 
