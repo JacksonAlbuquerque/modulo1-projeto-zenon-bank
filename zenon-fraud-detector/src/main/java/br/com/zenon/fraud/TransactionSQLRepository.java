@@ -97,5 +97,11 @@ public class TransactionSQLRepository implements TransactionRepository {
 
     }
 
+    public void cleanBD() throws SQLException {
+        String sql = "TRUNCATE TABLE TRANSACTIONS;";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.execute();
+        }
+    }
 
 }
