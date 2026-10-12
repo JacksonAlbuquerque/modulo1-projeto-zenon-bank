@@ -10,15 +10,16 @@ public class DBMain {
 
     static void main() throws IOException, SQLException {
         // com rewrite
-        try (final Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/zenon?rewriteBatchedStatements=true", "root", "senha123")) {
-          // sem rewrite
+        String URL = "jdbc:mysql://localhost:3306/zenon?rewriteBatchedStatements=true";
+        String user = "root";
+        String pass = "senha123";
+        // sem rewrite
 //        try (final Connection conn = DriverManager.getConnection(
 //                "jdbc:mysql://localhost:3306/zenon", "root", "senha123")) {
 
-            TransactionIngestor transactionIngestor = new TransactionIngestor();
-            List<Transaction> transactions = transactionIngestor.readTransactions(PATH_FILE);
-            TransactionSQLRepository transactionSQLRepository = new TransactionSQLRepository(conn);
+        TransactionIngestor transactionIngestor = new TransactionIngestor();
+        List<Transaction> transactions = transactionIngestor.readTransactions(PATH_FILE);
+        TransactionSQLRepository transactionSQLRepository = new TransactionSQLRepository(URL,user,pass);
 //            {// Se for executar esse comanod mais de uma vez lembrar de sempre limpar o banco antes da proxima execução TRUNCATE TABLE TRANSACTIONS;
 //                long init1 = System.nanoTime();
 //                for (Transaction transaction : transactions) {
@@ -31,41 +32,40 @@ public class DBMain {
 //                System.out.println("tempo: " + ((end1 - init1) / 1000000) + "ms");
 //                System.out.println("------------------------------------------------------------------------------------------");
 //            }
-            {// Se for executar esse comanod mais de uma vez lembrar de sempre limpar o banco antes da proxima execução TRUNCATE TABLE TRANSACTIONS;
-                long init1 = System.nanoTime();
-                transactionSQLRepository.saveAll(transactions);
-                long end1 = System.nanoTime();
-                System.out.println("Inserção no banco");
-                System.out.println("tempo: " + (end1 - init1) + "ns");
-                System.out.println("tempo: " + ((end1 - init1) / 1000) + "us");
-                System.out.println("tempo: " + ((end1 - init1) / 1000000) + "ms");
+        {// Se for executar esse comanod mais de uma vez lembrar de sempre limpar o banco antes da proxima execução TRUNCATE TABLE TRANSACTIONS;
+            long init1 = System.nanoTime();
+            transactionSQLRepository.saveAll(transactions);
+            long end1 = System.nanoTime();
+            System.out.println("Inserção no banco");
+            System.out.println("tempo: " + (end1 - init1) + "ns");
+            System.out.println("tempo: " + ((end1 - init1) / 1000) + "us");
+            System.out.println("tempo: " + ((end1 - init1) / 1000000) + "ms");
+            System.out.println("------------------------------------------------------------------------------------------");
+        }
+
+        for (int i = 0; i < 3; i++) {
+            long init = System.nanoTime();
+            Optional<Transaction> c1231006815 = transactionSQLRepository.findByOriginName("C1231006815");
+            long end = System.nanoTime();
+            if (i != 0) {
+                System.out.println("Procurando C1231006815");
+                System.out.println("tempo: " + (end - init) + "ns");
+                System.out.println("tempo: " + ((end - init) / 1000) + "us");
+                System.out.println("tempo: " + ((end - init) / 1000000) + "ms");
+                System.out.println(c1231006815);
                 System.out.println("------------------------------------------------------------------------------------------");
             }
 
-            for (int i = 0; i < 3; i++) {
-                long init = System.nanoTime();
-                Optional<Transaction> c1231006815 = transactionSQLRepository.findByOriginName("C1231006815");
-                long end = System.nanoTime();
-                if(i != 0) {
-                    System.out.println("Procurando C1231006815");
-                    System.out.println("tempo: " + (end - init) + "ns");
-                    System.out.println("tempo: " + ((end - init) / 1000) + "us");
-                    System.out.println("tempo: " + ((end - init) / 1000000) + "ms");
-                    System.out.println(c1231006815);
-                    System.out.println("------------------------------------------------------------------------------------------");
-                }
-
-                init = System.nanoTime();
-                Optional<Transaction> C12345 = transactionSQLRepository.findByOriginName("C12345");
-                end = System.nanoTime();
-                if(i != 0) {
-                    System.out.println("Procurando C12345");
-                    System.out.println("tempo: " + (end - init) + "ns");
-                    System.out.println("tempo: " + ((end - init) / 1000) + "us");
-                    System.out.println("tempo: " + ((end - init) / 1000000) + "ms");
-                    System.out.println(C12345);
-                    System.out.println("------------------------------------------------------------------------------------------");
-                }
+            init = System.nanoTime();
+            Optional<Transaction> C12345 = transactionSQLRepository.findByOriginName("C12345");
+            end = System.nanoTime();
+            if (i != 0) {
+                System.out.println("Procurando C12345");
+                System.out.println("tempo: " + (end - init) + "ns");
+                System.out.println("tempo: " + ((end - init) / 1000) + "us");
+                System.out.println("tempo: " + ((end - init) / 1000000) + "ms");
+                System.out.println(C12345);
+                System.out.println("------------------------------------------------------------------------------------------");
             }
         }
     }
